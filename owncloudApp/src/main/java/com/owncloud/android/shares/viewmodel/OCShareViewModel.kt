@@ -53,12 +53,11 @@ class OCShareViewModel(
     )
 ) : ViewModel() {
 
-    fun getSharesForFile() : LiveData<Resource<List<OCShare>>> {
+    fun getSharesForFile(): LiveData<Resource<List<OCShare>>> {
         return shareRepository.loadSharesForFile(filePath, account.name, shareTypes, reshares = true, subfiles = false)
     }
 
     fun insertPublicShareForFile(
-        filePath: String,
         permissions: Int,
         name: String,
         password: String,
@@ -67,6 +66,19 @@ class OCShareViewModel(
     ): LiveData<Resource<List<OCShare>>> {
         return shareRepository.insertPublicShareForFile(
             filePath, account.name, permissions, name, password, expirationTimeInMillis, uploadToFolderPermission
+        )
+    }
+
+    fun updatePublicShareForFile(
+        remoteId: Long,
+        password: String,
+        expirationDateInMillis: Long,
+        permissions: Int,
+        publicUpload: Boolean,
+        name: String
+    ): LiveData<Resource<List<OCShare>>> {
+        return shareRepository.updatePublicShareForFile(
+            filePath, account.name, remoteId, password, expirationDateInMillis, permissions, publicUpload, name
         )
     }
 }
