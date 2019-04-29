@@ -56,11 +56,12 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 
 @RunWith(AndroidJUnit4::class)
-class PublicShareDialogFragmentTest {
+class PublicShareCreationDialogFragmentTest {
     @Rule
     @JvmField
     val activityRule = ActivityTestRule(TestShareFileActivity::class.java, true, true)
 
+    private val account = mock(Account::class.java)
     private val capabilitiesLiveData = MutableLiveData<Resource<OCCapability>>()
     private val sharesLiveData = MutableLiveData<Resource<List<OCShare>>>()
     private val file = mock(OCFile::class.java)
@@ -79,6 +80,7 @@ class PublicShareDialogFragmentTest {
             shareLink = "http://server:port/s/2"
         ),
         TestUtil.createPublicShare(
+            shareWith = "1fa2P4QAq3412",
             path = "/Documents/doc2",
             isFolder = false,
             name = "Document link 2",
@@ -88,7 +90,6 @@ class PublicShareDialogFragmentTest {
 
     @Before
     fun setUp() {
-        val account = mock(Account::class.java)
         val defaultLinkName = "DOC_12112018.jpg link"
 
         val publicShareDialogFragment = PublicShareDialogFragment.newInstanceToCreate(
@@ -120,6 +121,7 @@ class PublicShareDialogFragmentTest {
 
         publicShareDialogFragment.ocCapabilityViewModelFactory = ViewModelUtil.createFor(ocCapabilityViewModel)
         publicShareDialogFragment.ocShareViewModelFactory = ViewModelUtil.createFor(ocShareViewModel)
+
         activityRule.activity.setFragment(publicShareDialogFragment)
     }
 
@@ -180,7 +182,9 @@ class PublicShareDialogFragmentTest {
             )
         )
 
-        onView(withId(R.id.shareViaLinkPasswordLabel)).check(matches(withText(R.string.share_via_link_password_enforced_label)))
+        onView(withId(R.id.shareViaLinkPasswordLabel)).check(
+            matches(withText(R.string.share_via_link_password_enforced_label))
+        )
         onView(withId(R.id.shareViaLinkPasswordSwitch))
             .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
         onView(withId(R.id.shareViaLinkPasswordValue))
